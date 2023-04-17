@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class HomeBasic {
+    private String id;
     private String title;
     private String location;
     private String info;
@@ -21,4 +22,5 @@ public class HomeBasic {
     private int focus;
     private String time; // 发布时间
     private List<String> tag = new ArrayList<>();
+    private String detailUrl;
 }

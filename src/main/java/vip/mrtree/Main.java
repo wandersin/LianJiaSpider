@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -31,7 +33,7 @@ public class Main {
 
     private final static String FILE_NAME = "链家.html";
 
-    private final static String KEY_WORD = "良乡";
+    private final static String KEY_WORD = "沙河";
 
     public static void main(String[] args) throws Exception {
         start(KEY_WORD);
@@ -82,35 +84,43 @@ public class Main {
         XSSFSheet sheet = workbook.createSheet("基本信息");
         // 表头
         XSSFRow row = sheet.createRow(0);
-        XSSFCell locationCell = row.createCell(1);
+        XSSFCell idCell = row.createCell(0);
+        idCell.setCellValue("id");
+        XSSFCell locationCell = row.createCell(2);
         locationCell.setCellValue("位置");
-        XSSFCell infoCell = row.createCell(2);
+        XSSFCell infoCell = row.createCell(3);
         infoCell.setCellValue("基本信息");
-        XSSFCell totalPriceCell = row.createCell(3);
+        XSSFCell totalPriceCell = row.createCell(4);
         totalPriceCell.setCellValue("总价");
-        XSSFCell unitPriceCell = row.createCell(4);
+        XSSFCell unitPriceCell = row.createCell(5);
         unitPriceCell.setCellValue("单价");
-        XSSFCell followCell = row.createCell(5);
+        XSSFCell followCell = row.createCell(6);
         followCell.setCellValue("关注");
-        XSSFCell tagCell = row.createCell(6);
+        XSSFCell tagCell = row.createCell(7);
         tagCell.setCellValue("标签");
+        XSSFCell urlCell = row.createCell(8);
+        urlCell.setCellValue("详情");
         int rowNum = 1;
         for (HomeBasic item : list) {
             XSSFRow itemRow = sheet.createRow(rowNum);
-            XSSFCell title = itemRow.createCell(0);
+            XSSFCell id = itemRow.createCell(0);
+            id.setCellValue(item.getId());
+            XSSFCell title = itemRow.createCell(1);
             title.setCellValue(item.getTitle());
-            XSSFCell location = itemRow.createCell(1);
+            XSSFCell location = itemRow.createCell(2);
             location.setCellValue(item.getLocation());
-            XSSFCell info = itemRow.createCell(2);
+            XSSFCell info = itemRow.createCell(3);
             info.setCellValue(item.getInfo());
-            XSSFCell totalPrice = itemRow.createCell(3);
+            XSSFCell totalPrice = itemRow.createCell(4);
             totalPrice.setCellValue(item.getTotalPrice());
-            XSSFCell unitPrice = itemRow.createCell(4);
+            XSSFCell unitPrice = itemRow.createCell(5);
             unitPrice.setCellValue(item.getUnitPrice());
-            XSSFCell follow = itemRow.createCell(5);
+            XSSFCell follow = itemRow.createCell(6);
             follow.setCellValue(item.getFollowInfo());
-            XSSFCell tag = itemRow.createCell(6);
+            XSSFCell tag = itemRow.createCell(7);
             tag.setCellValue(CollectionUtils.join(item.getTag(), ", "));
+            XSSFCell detail = itemRow.createCell(8);
+            detail.setCellValue(item.getDetailUrl());
             rowNum++;
         }
         FileOutputStream fileOut = new FileOutputStream(filePath);
@@ -133,7 +143,14 @@ public class Main {
             .collect(Collectors.toList());
         return list.stream().map(li -> {
             HomeBasic basic = new HomeBasic();
-            basic.setTitle(li.getElementsByTag("a").get(0).text());
+            Element a = li.getElementsByTag("a").get(0);
+            String detailUrl = a.attr("href");
+            Matcher matcher = Pattern.compile("^https://bj\\.lianjia\\.com/ershoufang/(.+)\\.html$").matcher(detailUrl);
+            if (matcher.find()) {
+                basic.setId(matcher.group(1));
+            }
+            basic.setTitle(a.text());
+            basic.setDetailUrl(detailUrl);
             List<String> locationStr = li.getElementsByClass("positionInfo").stream().map(Element::text).collect(Collectors.toList());
             basic.setLocation(CollectionUtils.join(locationStr, "-"));
             basic.setInfo(li.getElementsByClass("houseInfo").get(0).text());
