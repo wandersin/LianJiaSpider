@@ -1,26 +1,19 @@
 package vip.mrtree.bean;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class HomeBasic {
     private String id;
     private String title;
     private String location;
-    private String info;
-    private String followInfo;
-    private String totalPrice;
-    private String unitPrice;
-    private String houseType;
     private String area; // 面积
-    private String furnish; // 装修情况
-    private String floor; // 楼层
-    private String age;
-    private int focus;
-    private String time; // 发布时间
+    private String info;
     private List<String> tag = new ArrayList<>();
     private String detailUrl;
 }
