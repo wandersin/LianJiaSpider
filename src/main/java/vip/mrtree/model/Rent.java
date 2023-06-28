@@ -14,6 +14,7 @@ import vip.mrtree.utils.StringUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,14 @@ public class Rent implements Spider {
     public Object element2item(Element element) {
         RentHomeBasic rentHomeBasic = new RentHomeBasic();
         rentHomeBasic.setTitle(element.getElementsByClass("content__list--item--title").text());
-        rentHomeBasic.setInfo(element.getElementsByClass("content__list--item--des").text());
+        String info = element.getElementsByClass("content__list--item--des").text();
+        rentHomeBasic.setInfo(info);
+        List<String> list = Arrays.stream(info.split("/")).map(String::trim).toList();
+        rentHomeBasic.setLocation(list.get(0));
+        rentHomeBasic.setArea(list.get(1));
+        rentHomeBasic.setToward(list.get(2));
+        rentHomeBasic.setHouseType(list.get(3));
+        rentHomeBasic.setFloor(list.get(4));
         rentHomeBasic.getTag().addAll(element.select("i[class*=content__item__tag]").stream().map(Element::text).toList());
         rentHomeBasic.setPrice(element.getElementsByClass("content__list--item-price").text());
         rentHomeBasic.setBrand(element.getElementsByClass("brand").text());
@@ -56,13 +64,21 @@ public class Rent implements Spider {
         XSSFSheet sheet = workbook.createSheet("基本信息");
         // 表头
         XSSFRow row = sheet.createRow(0);
-        XSSFCell infoCell = row.createCell(1);
-        infoCell.setCellValue("基本信息");
-        XSSFCell priceCell = row.createCell(2);
+        XSSFCell locationCell = row.createCell(1);
+        locationCell.setCellValue("位置");
+        XSSFCell areaCell = row.createCell(2);
+        areaCell.setCellValue("面积");
+        XSSFCell typeCell = row.createCell(3);
+        typeCell.setCellValue("户型");
+        XSSFCell priceCell = row.createCell(4);
         priceCell.setCellValue("价格");
-        XSSFCell tagCell = row.createCell(3);
+        XSSFCell towardCell = row.createCell(5);
+        towardCell.setCellValue("朝向");
+        XSSFCell floorCell = row.createCell(6);
+        floorCell.setCellValue("楼层");
+        XSSFCell tagCell = row.createCell(7);
         tagCell.setCellValue("标签");
-        XSSFCell brandCell = row.createCell(4);
+        XSSFCell brandCell = row.createCell(8);
         brandCell.setCellValue("品牌优选");
         int rowNum = 1;
         for (Object tmp : list) {
@@ -70,13 +86,21 @@ public class Rent implements Spider {
             XSSFRow itemRow = sheet.createRow(rowNum);
             XSSFCell title = itemRow.createCell(0);
             title.setCellValue(item.getTitle());
-            XSSFCell info = itemRow.createCell(1);
-            info.setCellValue(item.getInfo());
-            XSSFCell price = itemRow.createCell(2);
+            XSSFCell location = itemRow.createCell(1);
+            location.setCellValue(item.getLocation());
+            XSSFCell area = itemRow.createCell(2);
+            area.setCellValue(item.getArea());
+            XSSFCell type = itemRow.createCell(3);
+            type.setCellValue(item.getHouseType());
+            XSSFCell price = itemRow.createCell(4);
             price.setCellValue(item.getPrice());
-            XSSFCell tag = itemRow.createCell(3);
+            XSSFCell toward = itemRow.createCell(5);
+            toward.setCellValue(item.getToward());
+            XSSFCell floor = itemRow.createCell(6);
+            floor.setCellValue(item.getFloor());
+            XSSFCell tag = itemRow.createCell(7);
             tag.setCellValue(CollectionUtils.join(item.getTag(), ", "));
-            XSSFCell brand = itemRow.createCell(4);
+            XSSFCell brand = itemRow.createCell(8);
             brand.setCellValue(item.getBrand());
             rowNum++;
         }

@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class RentHomeBasic extends HomeBasic {
     private String price; // 租金
+    private String toward; // 朝向
     private String brand; // 优选
 }

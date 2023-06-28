@@ -16,7 +16,7 @@ public interface Spider {
     default List<Object> search(CityEnum city, String key) throws IOException, InterruptedException {
         int num = getPageNum(city, key);
         List<Object> list = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < num; i++) {
             list.addAll(page2item(city, key, i + 1));
             Thread.sleep(5000);
         }

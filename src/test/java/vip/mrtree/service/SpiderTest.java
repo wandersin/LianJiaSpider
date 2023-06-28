@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SpiderTest {
     public static void main(String[] args) throws IOException, InterruptedException {
-        String key = "麓山大道";
+        String key = "麓山上院";
         rentTest(key);
     }
 
