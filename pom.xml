@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>vip.mrtree</groupId>
-    <artifactId>LianJiaSpider</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>lianjia-spider</artifactId>
+    <version>v1.1.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common-utils.version>v1.1.0</common-utils.version>
+        <common-utils.version>v1.1.1</common-utils.version>
         <lombok.version>1.18.24</lombok.version>
         <fastjson.version>2.0.20</fastjson.version>
         <poi-ooxml.version>5.2.2</poi-ooxml.version>
@@ -58,5 +58,14 @@
             <version>${commons-io.version}</version>
         </dependency>
     </dependencies>
-
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://192.168.3.2:8082/artifactory/default-maven/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://192.168.3.2:8082/artifactory/default-maven-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

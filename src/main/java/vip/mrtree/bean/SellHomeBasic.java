@@ -11,6 +11,4 @@ public class SellHomeBasic extends HomeBasic {
     private String unitPrice;
     private String furnish; // 装修情况
     private String age;
-    private int focus;
-    private String time; // 发布时间
 }

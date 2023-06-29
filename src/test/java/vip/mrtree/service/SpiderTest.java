@@ -1,7 +1,7 @@
 package vip.mrtree.service;
 
 import vip.mrtree.bean.CityEnum;
-import vip.mrtree.model.Rent;
+import vip.mrtree.model.Sell;
 import vip.mrtree.utils.DateUtils;
 import vip.mrtree.utils.StringUtils;
 
@@ -17,9 +17,9 @@ public class SpiderTest {
     }
 
     public static void rentTest(CityEnum city, String key) throws IOException, InterruptedException {
-        Spider spider = new Rent();
+        Spider spider = new Sell();
         List<Object> list = spider.search(city, key);
-        String filePath = StringUtils.strFormat("{}\\{}-{}.xlsx", ROOT_PATH, DateUtils.getDateStr("yyyyMMdd"), key);
+        String filePath = StringUtils.strFormat("{}\\售_{}-{}.xlsx", ROOT_PATH, DateUtils.getDateStr("yyyyMMdd"), key);
         spider.save(filePath, list);
     }
 }
