@@ -44,12 +44,12 @@ public interface Spider {
         System.out.println(StringUtils.strFormat("开始查询第 {} 页数据: {}", num, url));
         List<Object> list = new ArrayList<>();
         for (Element element : Jsoup.connect(url).get().getElementsByClass("content__list--item")) {
-            list.add(element2item(element));
+            list.add(element2item(city, element));
         }
         return list;
     }
 
-    Object element2item(Element element);
+    Object element2item(CityEnum city, Element element);
 
     void save(String filePath, List<Object> item) throws IOException;
 }
