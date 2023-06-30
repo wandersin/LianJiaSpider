@@ -6,7 +6,7 @@
 
     <groupId>vip.mrtree</groupId>
     <artifactId>lianjia-spider</artifactId>
-    <version>v1.1.0</version>
+    <version>v1.1.1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

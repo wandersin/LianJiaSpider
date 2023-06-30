@@ -13,6 +13,7 @@ public class HomeBasic {
     private String title;
     private String location;
     private String area; // 面积
+    private float areaNum;
     private String toward; // 朝向
     private String info;
     private String houseType; // 户型

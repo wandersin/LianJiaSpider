@@ -1,9 +1,8 @@
 package vip.mrtree.model;
 
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import vip.mrtree.bean.CityEnum;
@@ -16,6 +15,8 @@ import vip.mrtree.utils.StringUtils;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Rent implements Spider {
     private static final Map<CityEnum, UrlCollection> BASE_URL_MAP = new HashMap<>();
@@ -83,6 +84,10 @@ public class Rent implements Spider {
             }
             rentHomeBasic.setLocation(list.get(offset));
             rentHomeBasic.setArea(list.get(1 + offset));
+            Matcher areaMatcher = Pattern.compile("(\\d+\\.*\\d*)").matcher(rentHomeBasic.getArea());
+            if (areaMatcher.find()) {
+                rentHomeBasic.setAreaNum(Float.parseFloat(areaMatcher.group(1)));
+            }
             rentHomeBasic.setToward(list.get(2 + offset));
             rentHomeBasic.setHouseType(list.get(3 + offset));
             rentHomeBasic.setFloor(list.get(4 + offset));
@@ -104,7 +109,7 @@ public class Rent implements Spider {
         XSSFCell locationCell = row.createCell(2);
         locationCell.setCellValue("位置");
         XSSFCell areaCell = row.createCell(3);
-        areaCell.setCellValue("面积");
+        areaCell.setCellValue("面积 (平米)");
         XSSFCell typeCell = row.createCell(4);
         typeCell.setCellValue("户型");
         XSSFCell priceCell = row.createCell(5);
@@ -132,7 +137,8 @@ public class Rent implements Spider {
             XSSFCell location = itemRow.createCell(2);
             location.setCellValue(item.getLocation());
             XSSFCell area = itemRow.createCell(3);
-            area.setCellValue(item.getArea());
+            area.setCellValue(item.getAreaNum());
+            area.setCellType(CellType.NUMERIC);
             XSSFCell type = itemRow.createCell(4);
             type.setCellValue(item.getHouseType());
             XSSFCell price = itemRow.createCell(5);
@@ -147,6 +153,16 @@ public class Rent implements Spider {
             brand.setCellValue(item.getBrand());
             XSSFCell detailUrl = itemRow.createCell(10);
             detailUrl.setCellValue(item.getDetailUrl());
+            XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.URL);
+            XSSFCellStyle linkStyle = workbook.createCellStyle();
+            link.setAddress(item.getDetailUrl());
+            XSSFFont cellFont = workbook.createFont();
+            byte[] color = {0, (byte) 176, (byte) 240};
+            cellFont.setUnderline((byte) 1);
+            cellFont.setColor(new XSSFColor(color));
+            linkStyle.setFont(cellFont);
+            detailUrl.setCellStyle(linkStyle);
+            detailUrl.setHyperlink(link);
             rowNum++;
         }
         FileOutputStream fileOut = new FileOutputStream(filePath);
